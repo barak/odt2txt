@@ -1,0 +1,6 @@
+odt2txt (0.2+git20070106-1) unstable; urgency=low
+
+  * Initial release (Closes: #406495).
+
+ -- Nelson A. de Oliveira <naoliv@debian.org>  Thu, 11 Jan 2007 03:01:32 -0200
+

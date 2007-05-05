@@ -15,3 +15,4 @@ Description: simple converter from OpenDocument Text to plain text
  locale.
  .
   Homepage: http://stosberg.net/odt2txt/
+XB-Tag: implemented-in::c, interface::commandline, role::program, scope::utility, use::converting, use::viewing, works-with::text

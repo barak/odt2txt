@@ -1,0 +1,1 @@
+application/vnd.oasis.opendocument.text; /usr/bin/odt2txt '%s'; copiousoutput; description="OpenDocument Text"; nametemplate=%s.odt; priority=0

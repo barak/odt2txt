@@ -1,0 +1,8 @@
+Tip: If you use the mailreader "mutt", add
+
+auto_view application/vnd.oasis.opendocument.text
+
+to your .muttrc to automatically convert the attached OpenDocuments
+you receive to text.
+
+-- Charles Plessy <charles-debian-nospam@plessy.org>  Sat, 13 Jan 2007 09:47:07 +0900

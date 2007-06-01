@@ -12,6 +12,7 @@
 #define STRBUF_H
 
 #include "mem.h"
+#include "zlib.h"
 
 typedef struct strbuf {
 	char *data;
@@ -21,13 +22,13 @@ typedef struct strbuf {
 } STRBUF;
 
 enum strbuf_opt {
-	STRBUF_NULLOK = 1,
+	STRBUF_NULLOK = 1
 };
 
 /*
  * Initialize a new empty string buffer.
  */
-STRBUF *strbuf_new();
+STRBUF *strbuf_new(void);
 
 /*
  * Free a string buffer.
@@ -47,6 +48,12 @@ size_t strbuf_append_n(STRBUF *buf, const char *str, size_t n);
  * Returns the new length of the string buffer.
  */
 size_t strbuf_append(STRBUF *buf, const char *str);
+
+/*
+ * Reads a zlib-compressed data stream from in and appends
+ * it to the buffer out.  Returns the number of appended characters.
+ */
+size_t strbuf_append_inflate(STRBUF *buf, FILE *in);
 
 /*
  * Returns a pointer to the contained string.
@@ -90,10 +97,20 @@ char *strbuf_spit(STRBUF *buf);
 int strbuf_subst(STRBUF *buf, size_t start, size_t stop,
 	      const char *subst);
 
-
 /*
  * Set options for the string buffer
  */
 void strbuf_setopt(STRBUF *buf, enum strbuf_opt opt);
 
+/*
+ * Unset an option for the string buffer
+ */
+void strbuf_unsetopt(STRBUF *buf, enum strbuf_opt opt);
+
+/*
+ * Return the crc32 checksum of the buffer content.
+ */
+unsigned int strbuf_crc32(STRBUF *buf);
+
 #endif /* STRBUF_H */
+

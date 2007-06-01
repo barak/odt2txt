@@ -2,7 +2,7 @@ Source: odt2txt
 Section: text
 Priority: optional
 Maintainer: Nelson A. de Oliveira <naoliv@debian.org>
-Build-Depends: cdbs, debhelper (>= 5)
+Build-Depends: cdbs, debhelper (>= 5), zlib1g-dev
 Standards-Version: 3.7.2
 
 Package: odt2txt

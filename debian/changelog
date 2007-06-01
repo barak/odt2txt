@@ -1,3 +1,9 @@
+odt2txt (0.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Nelson A. de Oliveira <naoliv@debian.org>  Fri, 01 Jun 2007 08:47:29 -0300
+
 odt2txt (0.2+git20070106-2) unstable; urgency=low
 
   * Added mime support and a tip in README.Debian. A big thank you to Charles

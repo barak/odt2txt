@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Nelson A. de Oliveira <naoliv@debian.org>
 Build-Depends: cdbs, debhelper (>= 5), zlib1g-dev
 Standards-Version: 3.7.2
+Homepage: http://stosberg.net/odt2txt/
 
 Package: odt2txt
 Architecture: any
@@ -13,6 +14,3 @@ Description: simple converter from OpenDocument Text to plain text
  OpenOffice.org, KOffice, StarOffice and others. It is small and
  fast, can output the document in many encodings and adopts to your
  locale.
- .
-  Homepage: http://stosberg.net/odt2txt/
-XB-Tag: implemented-in::c, interface::commandline, role::program, scope::utility, use::converting, use::viewing, works-with::text

@@ -1,3 +1,17 @@
+odt2txt (0.3-3) unstable; urgency=low
+
+  * Added patches/fix-manpage.diff, removing "--force" option from manpage
+    (Closes: #472072);
+  * Added patches/ignore-mime.diff, removing mimetype check. odt2txt is now
+    able to extract text from OpenOffice.org XML files (.sxw) too:
+    - Added a "Provides: sxw2txt" in debian/control;
+    - Updated debian/{postinst,prerm} to include a sxw2txt alternative,
+      pointing to odt2txt;
+    - Updated debian/mime for the "new" sxw2txt.
+  * Bump Standards-Version to 3.8.0 (no changes needed).
+
+ -- Nelson A. de Oliveira <naoliv@debian.org>  Fri, 20 Jun 2008 02:54:31 -0300
+
 odt2txt (0.3-2) unstable; urgency=low
 
   * Using alternatives system to avoid conflict with unoconv. Thanks to

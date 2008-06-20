@@ -2,6 +2,7 @@
 
 if [ "$1" = remove ] || [ "$1" = deconfigure ]; then
 	update-alternatives --quiet --remove odt2txt /usr/bin/odt2txt.odt2txt
+	update-alternatives --quiet --remove sxw2txt /usr/bin/odt2txt.odt2txt
 fi
 
 #DEBHELPER#

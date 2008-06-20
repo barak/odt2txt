@@ -1,0 +1,13 @@
+diff -Nur -x '*.orig' -x '*~' odt2txt-0.3/odt2txt.1 odt2txt-0.3.new/odt2txt.1
+--- odt2txt-0.3/odt2txt.1	2007-05-21 17:50:37.000000000 -0300
++++ odt2txt-0.3.new/odt2txt.1	2008-06-20 01:12:03.000000000 -0300
+@@ -43,9 +43,6 @@
+ encoding will be used in automatic mode, use
+ \fB\-\-encoding\fR=\fIshow\fR
+ .TP
+-\fB\-\-force\fR
+-Do not stop if the mimetype if unknown.
+-.TP
+ \fB\-\-raw\fR
+ Print raw XML
+ .TP

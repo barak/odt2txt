@@ -1,2 +1,4 @@
 application/vnd.oasis.opendocument.text; /usr/bin/odt2txt '%s'; copiousoutput; description="OpenDocument Text"; nametemplate=%s.odt; priority=0
+application/vnd.oasis.opendocument.spreadsheet; /usr/bin/ods2txt '%s'; copiousoutput; description="OpenDocument Spreadsheet"; nametemplate=%s.ods; priority=0
+application/vnd.oasis.opendocument.presentation; /usr/bin/odp2txt '%s'; copiousoutput; description="OpenDocument Presentation"; nametemplate=%s.odp; priority=0
 application/application/vnd.sun.xml.writer; /usr/bin/sxw2txt '%s'; copiousoutput; description="OpenOffice.org/StarOffice Text"; nametemplate=%s.sxw; priority=0

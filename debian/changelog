@@ -1,3 +1,14 @@
+odt2txt (0.4-1) unstable; urgency=low
+
+  * New upstream release;
+  * Removed patches/fix-manpage.diff and patches/ignore-mime.diff (both
+    applied upstream);
+  * Changed sxw2txt from alternatives system to a symbolic link only;
+  * Created new links: ods2txt and odp2txt;
+  * Drop "Provides: sxw2txt" from debian/control.
+
+ -- Nelson A. de Oliveira <naoliv@debian.org>  Mon, 23 Jun 2008 19:22:26 -0300
+
 odt2txt (0.3-3) unstable; urgency=low
 
   * Added patches/fix-manpage.diff, removing "--force" option from manpage

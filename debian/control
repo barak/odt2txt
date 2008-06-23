@@ -9,10 +9,15 @@ Homepage: http://stosberg.net/odt2txt/
 Package: odt2txt
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Provides: sxw2txt
 Description: simple converter from OpenDocument Text to plain text
- odt2txt extracts the text out of OpenDocument Texts (.odt) or OpenOffice.org
- XML Files (.sxw, for example), as produced by OpenOffice.org, KOffice,
- StarOffice and others.
+ odt2txt is a command-line tool which extracts the text out of OpenDocument
+ Texts, as produced by OpenOffice.org, KOffice, StarOffice and others.
+ .
+ odt2txt can also extract text from some file formats similar to OpenDocument
+ Text, such as OpenOffice.org XML (*.sxw), which was used by OpenOffice.org
+ version 1.x and older StarOffice versions. To a lesser extend, odt2txt may
+ be useful to extract content from OpenDocument spreadsheets (*.ods) and
+ OpenDocument presentations (*.odp).
+ .
  It is small and fast, can output the document in many encodings and
  adopts to your locale.

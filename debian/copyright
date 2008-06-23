@@ -5,7 +5,7 @@ It was downloaded from http://stosberg.net/odt2txt/
 
 Upstream Author: Dennis Stosberg <dennis@stosberg.net>
 
-Copyright: 2006,2007 Dennis Stosberg <dennis@stosberg.net>
+Copyright: 2006-2008 Dennis Stosberg <dennis@stosberg.net>
 Uses the kunzip library, Copyright 2005,2006 by Michael Kohn <mike@mikekohn.net>
 
 Both odt2txt and kunzip are released under GNU GPL-2.

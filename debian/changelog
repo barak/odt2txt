@@ -1,3 +1,13 @@
+odt2txt (0.4+git20100620-1) unstable; urgency=low
+
+  * New upstream git snapshot (53b4871):
+    - Use system libzip instead of embedded kunzip (Closes: #523808).
+  * Fix "set -e" in prerm and postinst;
+  * Convert package to the new format 3.0 (quilt);
+  * Updated Standards-Version to 3.8.4 (no changes needed).
+
+ -- Nelson A. de Oliveira <naoliv@debian.org>  Sun, 20 Jun 2010 22:33:47 -0300
+
 odt2txt (0.4-1) unstable; urgency=low
 
   * New upstream release;

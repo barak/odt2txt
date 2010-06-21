@@ -14,10 +14,17 @@ ifdef NO_ICONV
 CFLAGS += -DNO_ICONV
 endif
 
-KUNZIP_OBJS = kunzip/fileio.o kunzip/zipfile.o
-OBJ = odt2txt.o regex.o mem.o strbuf.o $(KUNZIP_OBJS)
-TEST_OBJ = t/test-strbuf.o t/test-regex.o
 LIBS = -lz
+ZIP_OBJS =
+ifdef HAVE_LIBZIP
+	CFLAGS += -DHAVE_LIBZIP
+	LIBS += -lzip
+else
+	ZIP_OBJS = kunzip/fileio.o kunzip/zipfile.o
+endif
+
+OBJ = odt2txt.o regex.o mem.o strbuf.o $(ZIP_OBJS)
+TEST_OBJ = t/test-strbuf.o t/test-regex.o
 ALL_OBJ = $(OBJ) $(TEST_OBJ)
 
 INSTALL = install
@@ -38,6 +45,11 @@ ifeq ($(UNAME_S),OpenBSD)
 	CFLAGS += -DICONV_CHAR="const char" -I/usr/local/include
 	LDFLAGS += -L/usr/local/lib
 	LIBS += -liconv
+endif
+ifeq ($(UNAME_S),Darwin)
+       CFLAGS += -I/opt/local/include
+       LDFLAGS += -L/opt/local/lib
+       LIBS += -liconv
 endif
 ifeq ($(UNAME_S),NetBSD)
 	CFLAGS += -DICONV_CHAR="const char"

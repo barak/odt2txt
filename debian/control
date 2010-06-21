@@ -2,8 +2,8 @@ Source: odt2txt
 Section: text
 Priority: optional
 Maintainer: Nelson A. de Oliveira <naoliv@debian.org>
-Build-Depends: cdbs, debhelper (>= 7), zlib1g-dev
-Standards-Version: 3.8.0
+Build-Depends: cdbs, debhelper (>= 7), zlib1g-dev, libzip-dev
+Standards-Version: 3.8.4
 Homepage: http://stosberg.net/odt2txt/
 
 Package: odt2txt

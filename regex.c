@@ -1,7 +1,7 @@
 /*
  * regex.c: String and regex operations for odt2txt
  *
- * Copyright (c) 2006-2008 Dennis Stosberg <dennis@stosberg.net>
+ * Copyright (c) 2006-2009 Dennis Stosberg <dennis@stosberg.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License,
@@ -53,7 +53,14 @@ int regex_subst(STRBUF *buf,
 
 		bufp = strbuf_get(buf) + off;
 
+#ifdef REG_STARTEND
+		matches[0].rm_so = 0;
+		matches[0].rm_eo = strbuf_len(buf) - off;
+
+		if (0 != regexec(&rx, bufp, nmatches, matches, REG_STARTEND))
+#else
 		if (0 != regexec(&rx, bufp, nmatches, matches, 0))
+#endif
 			break;
 
 		if (matches[i].rm_so != -1) {
@@ -187,7 +194,7 @@ static size_t charlen_utf8(const char *s)
 
 STRBUF *wrap(STRBUF *buf, int width)
 {
-	const char *lf = "\n  ";
+	const char *lf = "\n";
 	const size_t lflen = strlen(lf);
 	const char *bufp;
 	const char *last;

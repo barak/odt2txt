@@ -5,8 +5,7 @@ It was downloaded from http://stosberg.net/odt2txt/
 
 Upstream Author: Dennis Stosberg <dennis@stosberg.net>
 
-Copyright: 2006-2008 Dennis Stosberg <dennis@stosberg.net>
-Uses the kunzip library, Copyright 2005,2006 by Michael Kohn <mike@mikekohn.net>
+Copyright: 2006-2009 Dennis Stosberg <dennis@stosberg.net>
 
 Both odt2txt and kunzip are released under GNU GPL-2.
 
@@ -28,5 +27,5 @@ License:
 On Debian systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL-2'.
 
-The Debian packaging is (C) 2007, Nelson A. de Oliveira <naoliv@debian.org> and
+The Debian packaging is © 2007, Nelson A. de Oliveira <naoliv@debian.org> and
 is licensed under the GPL, see above.

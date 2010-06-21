@@ -4,6 +4,8 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/makefile.mk
 
 DEB_MAKE_INSTALL_TARGET := install DESTDIR=$(CURDIR)/debian/odt2txt/usr
+DEB_MAKE_ENVVARS := HAVE_LIBZIP="true"
+CFLAGS += -DHAVE_LIBZIP
 
 binary-install/odt2txt::
 	mv $(CURDIR)/debian/odt2txt/usr/bin/odt2txt $(CURDIR)/debian/odt2txt/usr/bin/odt2txt.odt2txt

@@ -35,7 +35,7 @@
 #include "strbuf.h"
 #include "kunzip/kunzip.h"
 
-#define VERSION "0.2"
+#define VERSION "0.3"
 
 static int opt_raw;
 static char *opt_encoding;
@@ -486,8 +486,6 @@ int main(int argc, const char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	(void)kunzip_inflate_init();
-
 	/* check mimetype */
 	mimetype = read_from_zip(opt_filename, "mimetype");
 
@@ -506,7 +504,6 @@ int main(int argc, const char **argv)
 
 	/* read content.xml */
 	docbuf = read_from_zip(opt_filename, "content.xml");
-	(void)kunzip_inflate_free();
 
 	if (!opt_raw) {
 		subst_doc(ic, docbuf);
@@ -514,6 +511,10 @@ int main(int argc, const char **argv)
 	}
 
 	wbuf = wrap(docbuf, opt_width);
+
+	/* remove all trailing whitespace */
+	(void) regex_subst(wbuf, " +\n", _REG_GLOBAL, "\n");
+
 	outbuf = conv(ic, wbuf);
 
 	if (opt_output)

@@ -30,11 +30,11 @@ ALL_OBJ = $(OBJ) $(TEST_OBJ)
 INSTALL = install
 GROFF   = groff
 
-DESTDIR = /usr/local
-PREFIX  =
-BINDIR  = $(PREFIX)/bin
-MANDIR  = $(PREFIX)/share/man
-MAN1DIR = $(MANDIR)/man1
+DESTDIR =
+prefix  = /usr/local
+bindir  = $(prefix)/bin
+mandir  = $(prefix)/share/man
+man1dir = $(mandir)/man1
 
 ifeq ($(UNAME_S),FreeBSD)
 	CFLAGS += -DICONV_CHAR="const char" -I/usr/local/include
@@ -99,10 +99,10 @@ $(ALL_OBJ): Makefile
 all: $(BIN)
 
 install: $(BIN) $(MAN)
-	$(INSTALL) -d -m755 $(DESTDIR)$(BINDIR)
-	$(INSTALL) $(BIN) $(DESTDIR)$(BINDIR)
-	$(INSTALL) -d -m755 $(DESTDIR)$(MAN1DIR)
-	$(INSTALL) $(MAN) $(DESTDIR)$(MAN1DIR)
+	$(INSTALL) -d -m755 $(DESTDIR)$(bindir)
+	$(INSTALL) $(BIN) $(DESTDIR)$(bindir)/
+	$(INSTALL) -d -m755 $(DESTDIR)$(man1dir)
+	$(INSTALL) $(MAN) $(DESTDIR)$(man1dir)/
 
 odt2txt.html: $(MAN)
 	$(GROFF) -Thtml -man $(MAN) > $@

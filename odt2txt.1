@@ -1,4 +1,4 @@
-.TH ODT2TXT "1" "2007-01-14" "odt2txt 0.3" "User Commands"
+.TH ODT2TXT "1" "2008-06-23" "odt2txt 0.4" "User Commands"
 .SH NAME
 odt2txt \- a simple converter from OpenDocument Text to plain text
 .SH SYNOPSIS
@@ -8,6 +8,13 @@ odt2txt \- a simple converter from OpenDocument Text to plain text
 odt2txt is a command-line tool which extracts the text out of
 OpenDocument Texts, as produced by OpenOffice.org, KOffice,
 StarOffice and others.
+.PP
+odt2txt can also extract text from some file formats similar to
+OpenDocument Text, such as OpenOffice.org XML (*.sxw), which was
+used by OpenOffice.org version 1.x and older StarOffice versions.
+To a lesser extend, odt2txt may be useful to extract content from
+OpenDocument spreadsheets (*.ods) and OpenDocument presentations
+(*.odp).
 .PP
 The FILENAME argument is mandatory.
 .SH OPTIONS
@@ -42,9 +49,6 @@ Do not try to autodetect the terminal encoding, but convert the
 document to encoding \fIX\fR unconditionally To find out, which terminal
 encoding will be used in automatic mode, use
 \fB\-\-encoding\fR=\fIshow\fR
-.TP
-\fB\-\-force\fR
-Do not stop if the mimetype if unknown.
 .TP
 \fB\-\-raw\fR
 Print raw XML

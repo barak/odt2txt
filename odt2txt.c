@@ -2,7 +2,7 @@
  * odt2txt.c: A simple (and stupid) converter from OpenDocument Text
  *            to plain text.
  *
- * Copyright (c) 2006,2007 Dennis Stosberg <dennis@stosberg.net>
+ * Copyright (c) 2006-2008 Dennis Stosberg <dennis@stosberg.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License,
@@ -14,12 +14,15 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <iconv.h>
-
-#ifdef WIN32
-#  include <windows.h>
+#ifdef NO_ICONV
+#  define iconv_t int
 #else
-#  include <langinfo.h>
+#  include <iconv.h>
+#  ifdef WIN32
+#    include <windows.h>
+#  else
+#    include <langinfo.h>
+#  endif
 #endif
 
 #include <limits.h>
@@ -35,13 +38,12 @@
 #include "strbuf.h"
 #include "kunzip/kunzip.h"
 
-#define VERSION "0.3"
+#define VERSION "0.4"
 
 static int opt_raw;
 static char *opt_encoding;
 static int opt_width = 63;
 static const char *opt_filename;
-static int opt_force;
 static char *opt_output;
 
 #define SUBST_NONE 0
@@ -57,6 +59,10 @@ static int opt_subst = SUBST_SOME;
 #ifdef iconvlist
 static void show_iconvlist();
 #endif
+
+#define RS_O(a,b) (void)regex_subst(buf, (a), _REG_DEFAULT, (b))
+#define RS_G(a,b) (void)regex_subst(buf, (a), _REG_GLOBAL, (b))
+#define RS_E(a,b) (void)regex_subst(buf, (a), _REG_EXEC | _REG_GLOBAL, (void*)(b))
 
 static char *guess_encoding(void);
 static void write_to_file(STRBUF *outbuf, const char *filename);
@@ -125,17 +131,22 @@ static struct subst substs[] = {
 static void usage(void)
 {
 	printf("odt2txt %s\n"
-	       "Converts an OpenDocument Text to raw text.\n\n"
+	       "Converts an OpenDocument or OpenOffice.org XML File to raw text.\n\n"
 	       "Syntax:   odt2txt [options] filename\n\n"
 	       "Options:  --raw         Print raw XML\n"
+#ifdef NO_ICONV
+	       "          --encoding=X  Ignored. odt2txt has been built without iconv support.\n"
+	       "                        Output will always be encoded in UTF-8\n"
+#else
 	       "          --encoding=X  Do not try to autodetect the terminal encoding, but\n"
 	       "                        convert the document to encoding X unconditionally\n"
-#ifdef iconvlist
+#  ifdef iconvlist
 	       "                        You can list all supported encodings by specifying\n"
 	       "                        --encoding=list\n"
-#endif
+#  endif
 	       "                        To find out, which terminal encoding will be used in\n"
 	       "                        auto mode, use --encoding=show\n"
+#endif
 	       "          --width=X     Wrap text lines after X characters. Default: 65.\n"
 	       "                        If set to -1 then no lines will be broken\n"
 	       "          --output=file Write output to file, instead of STDOUT\n"
@@ -147,7 +158,6 @@ static void usage(void)
 	       "                                         output charset does not contain\n"
 	       "                                         This is the default\n"
 	       "                           --subst=none  Substitute no characters\n"
-	       "          --force       Do not stop if the mimetype if unknown\n"
 	       "          --version     Show version and copyright information\n",
 	       VERSION);
 	exit(EXIT_FAILURE);
@@ -173,6 +183,38 @@ static void yrealloc_buf(char **buf, char **mark, size_t len) {
 	*buf = yrealloc(*buf, len);
 	*mark = *buf + offset;
 }
+
+#ifdef NO_ICONV
+
+static void finish_conv(iconv_t ic)
+{
+	return;
+}
+
+static iconv_t init_conv(const char *input_enc, const char *output_enc)
+{
+	return 0;
+}
+
+static STRBUF *conv(iconv_t ic, STRBUF *buf) {
+	STRBUF *output;
+
+	output = strbuf_new();
+	strbuf_append_n(output, strbuf_get(buf), strbuf_len(buf));
+
+	return output;
+}
+
+static void subst_doc(iconv_t ic, STRBUF *buf) {
+	return;
+}
+
+static char *guess_encoding(void)
+{
+	return NULL;
+}
+
+#else
 
 static iconv_t init_conv(const char *input_enc, const char *output_enc)
 {
@@ -268,35 +310,6 @@ static STRBUF *conv(iconv_t ic, STRBUF *buf)
 	return output;
 }
 
-static STRBUF *read_from_zip(const char *zipfile, const char *filename)
-{
-	int r;
-	STRBUF *content;
-
-	r = kunzip_get_offset_by_name((char*)zipfile, (char*)filename, 3, -1);
-
-	if(-1 == r) {
-		fprintf(stderr,
-			"Can't read from %s: Is it an OpenDocument Text?\n", zipfile);
-		exit(EXIT_FAILURE);
-	}
-
-	content = kunzip_next_tobuf((char*)zipfile, r);
-
-	if (!content) {
-		fprintf(stderr,
-			"Can't extract %s from %s.  Maybe the file is corrupted?\n",
-			filename, zipfile);
-		exit(EXIT_FAILURE);
-	}
-
-	return content;
-}
-
-#define RS_O(a,b) (void)regex_subst(buf, (a), _REG_DEFAULT, (b))
-#define RS_G(a,b) (void)regex_subst(buf, (a), _REG_GLOBAL, (b))
-#define RS_E(a,b) (void)regex_subst(buf, (a), _REG_EXEC | _REG_GLOBAL, (void*)(b))
-
 static void subst_doc(iconv_t ic, STRBUF *buf)
 {
 	struct subst *s = substs;
@@ -337,6 +350,54 @@ static void subst_doc(iconv_t ic, STRBUF *buf)
 	yfree(outbuf);
 }
 
+static char *guess_encoding(void)
+{
+	char *enc;
+	char *tmp;
+
+	enc = ymalloc(20);
+#ifdef WIN32
+	snprintf(enc, 20, "CP%u", GetACP());
+#else
+	tmp = nl_langinfo(CODESET);
+	strncpy(enc, tmp, 20);
+#endif
+	if(!enc) {
+		fprintf(stderr, "warning: Could not detect console "
+			"encoding. Assuming ISO-8859-1\n");
+		strncpy(enc, "ISO-8859-1", 20);
+	}
+
+	return enc;
+}
+
+#endif
+
+static STRBUF *read_from_zip(const char *zipfile, const char *filename)
+{
+	int r;
+	STRBUF *content;
+
+	r = kunzip_get_offset_by_name((char*)zipfile, (char*)filename, 3, -1);
+
+	if(-1 == r) {
+		fprintf(stderr,
+			"Can't read from %s: Is it an OpenDocument Text?\n", zipfile);
+		exit(EXIT_FAILURE);
+	}
+
+	content = kunzip_next_tobuf((char*)zipfile, r);
+
+	if (!content) {
+		fprintf(stderr,
+			"Can't extract %s from %s.  Maybe the file is corrupted?\n",
+			filename, zipfile);
+		exit(EXIT_FAILURE);
+	}
+
+	return content;
+}
+
 static void format_doc(STRBUF *buf)
 {
 	/* FIXME: Convert buffer to utf-8 first.  Are there
@@ -367,27 +428,6 @@ static void format_doc(STRBUF *buf)
 	RS_O("\n{2,}$",  "\n");
 }
 
-static char *guess_encoding(void)
-{
-	char *enc;
-	char *tmp;
-
-	enc = ymalloc(20);
-#ifdef WIN32
-	snprintf(enc, 20, "CP%u", GetACP());
-#else
-	tmp = nl_langinfo(CODESET);
-	strncpy(enc, tmp, 20);
-#endif
-	if(!enc) {
-		fprintf(stderr, "warning: Could not detect console "
-			"encoding. Assuming ISO-8859-1\n");
-		strncpy(enc, "ISO-8859-1", 20);
-	}
-
-	return enc;
-}
-
 int main(int argc, const char **argv)
 {
 	struct stat st;
@@ -395,7 +435,6 @@ int main(int argc, const char **argv)
 	STRBUF *wbuf;
 	STRBUF *docbuf;
 	STRBUF *outbuf;
-	STRBUF *mimetype;
 	int i = 1;
 
 	(void)setlocale(LC_ALL, "");
@@ -423,7 +462,7 @@ int main(int argc, const char **argv)
 			}
 			i++; continue;
 		} else if (!strcmp(argv[i], "--force")) {
-			opt_force = 1;
+			// ignore this setting
 			i++; continue;
 		} else if (!strncmp(argv[i], "--output=", 9)) {
 			if (*(argv[i] + 9) != '-') {
@@ -478,29 +517,13 @@ int main(int argc, const char **argv)
 		opt_encoding = guess_encoding();
 	}
 
-	ic = init_conv("utf-8", opt_encoding);
+	ic = init_conv("UTF-8", opt_encoding);
 
 	if (0 != stat(opt_filename, &st)) {
 		fprintf(stderr, "%s: %s\n",
 			opt_filename, strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-
-	/* check mimetype */
-	mimetype = read_from_zip(opt_filename, "mimetype");
-
-	if (0 == strcmp("application/vnd.oasis.opendocument.text",
-			strbuf_get(mimetype))
-	    && 0 == strcmp("application/vnd.sun.xml.writer",
-			   strbuf_get(mimetype))
-	    && !opt_force) {
-		fprintf(stderr, "Document has unknown mimetype: -%s-\n",
-			strbuf_get(mimetype));
-		fprintf(stderr, "Won't continue without --force.\n");
-		strbuf_free(mimetype);
-		exit(EXIT_FAILURE);
-	}
-	strbuf_free(mimetype);
 
 	/* read content.xml */
 	docbuf = read_from_zip(opt_filename, "content.xml");
@@ -526,8 +549,9 @@ int main(int argc, const char **argv)
 	strbuf_free(wbuf);
 	strbuf_free(docbuf);
 	strbuf_free(outbuf);
-
+#ifndef NO_ICONV
 	yfree(opt_encoding);
+#endif
 	if (opt_output)
 		yfree(opt_output);
 

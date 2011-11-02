@@ -1,0 +1,20 @@
+You can cause git to show textual diffs between versions of
+OpenDocument files by doing the following.
+
+$ git config --global diff.odf.textconv odt2txt
+$ git config --global core.attributesfile ~/.gitattributes-odf
+$ cat >> ~/.gitattributes-odf <<EOF
+*.ods diff=odf
+*.odt diff=odf
+*.odp diff=odf
+EOF
+
+Alternatively, diff.odf.textconv can be set for the current
+repository, and the attributes can be set by putting the attribute
+text into either a .gitattributes file in some directory inside the
+repository along the path to the files in question, or in the
+.git/info/attributes file.
+
+Reference: http://www-verimag.imag.fr/~moy/opendocument/
+
+ -- Barak A. Pearlmutter <bap@debian.org>, Wed,  2 Nov 2011 11:24:59 +0000

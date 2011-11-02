@@ -1,3 +1,14 @@
+odt2txt (0.4+git20100620-2.0) unstable; urgency=low
+
+  * Bump Standards-Version to 3.9.2 (no changes needed).
+  * Bump to dh 8.
+  * Correct akward grammer and typo in package description.
+  * Add git diff tip in README-git and move mutt tip to README-mutt.
+  * Quilt patch to standardize Makefile installation variables.
+  * Remove tiny bit of redundancy in debian/rules.
+
+ -- Barak A. Pearlmutter <bap@debian.org>  Wed, 02 Nov 2011 12:02:29 +0000
+
 odt2txt (0.4+git20100620-1) unstable; urgency=low
 
   * New upstream git snapshot (53b4871):

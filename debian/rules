@@ -8,5 +8,5 @@ DEB_MAKE_ENVVARS := HAVE_LIBZIP="true"
 CFLAGS += -DHAVE_LIBZIP
 
 binary-install/odt2txt::
-	mv $(CURDIR)/debian/odt2txt/usr/bin/odt2txt $(CURDIR)/debian/odt2txt/usr/bin/odt2txt.odt2txt
-	mv $(CURDIR)/debian/odt2txt/usr/share/man/man1/odt2txt.1 $(CURDIR)/debian/odt2txt/usr/share/man/man1/odt2txt.odt2txt.1
+	cd $(CURDIR)/debian/odt2txt/usr/bin && mv odt2txt odt2txt.odt2txt
+	cd $(CURDIR)/debian/odt2txt/usr/share/man/man1 && mv odt2txt.1 odt2txt.odt2txt.1
